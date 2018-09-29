@@ -1,0 +1,106 @@
+﻿@model bidster.Models.Auction
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewData.ContainsKey("empty"))
+{
+    <h2 class="text-center">No details regarding this auction.</h2>
+}
+else
+{
+    <script src="~/Scripts/timer.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.3.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+
+    <h2 class="text-center">Auction Details</h2>
+
+    <div class="box">
+        <img src=@Url.Action("GetImage", new { id = @Model.ID}) class="img-rounded col-md-0" style="float:left;" width="540px" height="510px" />
+        <div class="container">
+            <div class="row">
+                <div class="text-center">
+                    <span style="font-size:120%">Product name: @Html.ActionLink(Model.Name, "Details/" + Model.ID, "Auctions")</span>
+                    <br />
+                    <br />
+                    <span style="font-size:120%;">Price: <span id="price">@Model.Price</span></span>
+                    <br />
+                    <br />
+                    <span style="font-size:120%;">Amount to bid: <input type="number" id="input" /></span>
+                    <br />
+                    <br />
+                    @if (Session["userType"] != null && (int)Session["userID"] != Model.PostedByUser)
+                    {
+                        <button id="button @Model.ID" type="submit" onclick="sendBid(@Model.ID)" class="btn btn-primary btn-sm">Bid</button>
+                        <br />
+                            <br />
+                    }
+                    else
+                    {
+                        <button id="button @Model.ID" type="submit" onclick="sendBid(@Model.ID)" class="btn btn-primary btn-sm" disabled>Bid</button>
+                        <br />
+                            <br />
+                    }
+                    <p id="@Model.ID" style="font-size:200%"></p>
+                    <script>
+                    var runTimer = function() {
+                        var x = setInterval(function () { startTimer(new Date('@String.Format("{0:MMM dd, yyyy HH:mm:ss}", Model.DateOpened.Value.Add(Model.TimeOpened.Value.Add(new TimeSpan(0, 0, (int)Model.Duration))))').getTime(), @Model.ID);}, 1000);
+                    }
+                    runTimer();
+                    </script>
+
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <span id="bids">Bids:</span><br />
+            @if (Model.Bid.Count != 0)
+            {
+                foreach (var bid in Model.Bid.OrderByDescending(m => m.Date).ThenByDescending(m => m.Time))
+                {
+                    <span style="font-size:120%;"><span id="user">@bid.User.Email</span></span>
+                    <br />
+                }
+
+            }
+        </div>
+    </div>
+
+    <script>
+    $(function () {
+
+            var bidHub = $.connection.bidHub;
+
+            bidHub.client.addNewBid = function (name, price, auctionID) {
+                if (auctionID == @Model.ID) {
+                    $("#bids").next().next().css("color", "");
+                    $('#bids').after('<br \><span id="highlight" style="font-size:120%;color:#fffdb2"><span id="user">' + name + '</span></span>');
+                    $('#price')[0].innerHTML = '<strong>' + price + '</strong>';
+                    var newPrice = price + 1;
+                    $('#input').val(newPrice);
+                    setTimeout(function () {
+                        $('#highlight').css("color", "");
+                    }, 500);
+                }
+            };
+
+            $.connection.hub.start();
+
+        });
+
+    </script>
+
+    if (Session["userType"] != null)
+    {
+        <script>
+        function sendBid(id) {
+            var inputID = '#input';
+            var price = $(inputID).val();
+            var user = @Session["userID"];
+            $.connection.bidHub.server.send(user, price, id);
+        }
+        </script>
+    }
+}

@@ -1,0 +1,83 @@
+﻿@model bidster.ViewModels.User
+
+@{
+    ViewBag.Title = "Register";
+}
+
+@if (ViewData.ContainsKey("success"))
+{
+    <div class="jumbotron text-center" style="background:transparent !important">
+        <h3>You have completed your registration! You can <a href="/Home/Login">login</a> now.</h3>
+    </div>
+}
+else
+{
+    <div class="jumbotron text-center" style="background:transparent !important">
+        <h3>Register for free and unlock all features on Bidster!</h3>
+    </div>
+
+
+    <div class="col-md-4 col-md-offset-4 main-center box">
+        <div class="box-content">
+            <form class="form-horizontal" method="post" action="/Home/Register">
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label for="name" class="cols-sm-2 control-label">First Name</label>
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", @placeholder = "Enter your First Name" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.FirstName, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="name" class="cols-sm-2 control-label">Last Name</label>
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", @placeholder = "Enter your Last Name" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="cols-sm-2 control-label">Email</label>
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Enter your Email", @type = "email" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.Email, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="cols-sm-2 control-label">Password</label>
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+                            @Html.TextBoxFor(m => m.Password, new { @class = "form-control", @placeholder = "Enter password", @type = "password" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.Password, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirm" class="cols-sm-2 control-label">Confirm Password</label>
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+                            @Html.TextBoxFor(m => m.Confirm, new { @class = "form-control", @placeholder = "Confirm your Password", @type = "password" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.Confirm, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <button type="submit" class="btn btn-primary btn-lg btn-block login-button">Register</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+}
+

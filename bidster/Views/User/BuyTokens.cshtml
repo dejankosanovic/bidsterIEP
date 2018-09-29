@@ -1,0 +1,78 @@
+﻿
+@{
+    ViewBag.Title = "Buy Tokens";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@if (ViewData.ContainsKey("error"))
+{
+    <h2 class="text-center">@ViewData["error"]</h2>
+}
+else
+{
+    <h2 class="text-center">BuyTokens</h2>
+
+    using (Html.BeginForm("BuyTokens", "User", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        if (!ViewData.ContainsKey("pin"))
+        {
+            <div class="form-horizontal col-md-4 col-md-offset-4">
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <label>Select package:</label>
+                        <select name="package">
+                            <option value="silver">Silver package: @ViewData["silver"] tokens = @ViewData["silver"]RSD</option>
+                            <option value="gold">Gold package: @ViewData["gold"] tokens = @ViewData["gold"]RSD</option>
+                            <option value="platinum">Platinum package: @ViewData["platinum"] tokens = @ViewData["platinum"]RSD</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <label>Mobile Number:</label>
+                        <input type="number" name="mobile" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Buy tokens" class="btn btn-primary btn-lg btn-block login-button" />
+                    </div>
+                </div>
+
+            </div>
+        }
+        else
+        {
+            <div class="form-horizontal col-md-4 col-md-offset-4">
+                
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <label>PIN:</label>
+                        <input type="number" name="pin" />
+                    </div>
+                </div>
+                @if (ViewData.ContainsKey("pin_error"))
+                {
+                    <p class="col-md-offset-2 col-md-10">@ViewData["pin_error"]</p>
+                }
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Send PIN" class="btn btn-primary btn-lg btn-block login-button" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="hidden" value="@ViewData["transactionID"]" name="transactionID" />
+                    </div>
+                </div>
+
+            </div>
+        }
+    }
+}

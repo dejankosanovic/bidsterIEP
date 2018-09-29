@@ -1,0 +1,62 @@
+﻿@model bidster.ViewModels.ChangeUser
+
+@{
+    ViewBag.Title = "MyProfile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="jumbotron text-center" style="background:transparent !important">
+    <h3>Change Your Information</h3>
+</div>
+
+
+<div class="col-md-4 col-md-offset-4 main-center box">
+    <div class="box-content">
+        <form class="form-horizontal" method="post" action="/User/MyProfile">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label for="name" class="cols-sm-2 control-label">First Name</label>
+                <div class="cols-sm-10">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", @placeholder = "Your First Name" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.FirstName, null, new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="name" class="cols-sm-2 control-label">Last Name</label>
+                <div class="cols-sm-10">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", @placeholder = "Your Last Name" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email" class="cols-sm-2 control-label">Email</label>
+                <div class="cols-sm-10">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Your Email", @type = "email" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.Email, null, new { @class = "text-danger" })
+                </div>
+            </div>
+                   
+            <div class="form-group">
+                @Html.ActionLink("Change your password", "PasswordChange")
+            </div>
+
+            <div class="form-group">
+                <label for="tokens" class="cols-sm-2 control-label">Tokens</label>
+                @Html.TextBoxFor(m => m.Tokens, new { @class = "form-control", @disabled = true })
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-lg btn-block login-button">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>

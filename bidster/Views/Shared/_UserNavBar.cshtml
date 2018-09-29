@@ -1,0 +1,25 @@
+﻿<div class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            @Html.ActionLink("Bidster", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="navbar-link">@Html.ActionLink("MyProfile", "MyProfile", "User")</li>
+                <li class="navbar-link">@Html.ActionLink("Auctions", "Search", "Auctions")</li>
+                <li class="navbar-link">@Html.ActionLink("New Auction", "CreateAuction", "Auctions")</li>
+                <li class="navbar-link">@Html.ActionLink("Buy Tokens", "BuyTokens", "User")</li>
+                <li class="navbar-link">@Html.ActionLink("Purchase History", "PurchaseHistory", "User")</li>
+                <li class="navbar-link">@Html.ActionLink("Won Auctions", "WonAuctions", "User")</li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="navbar-link"><a href="/User/Logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</div>

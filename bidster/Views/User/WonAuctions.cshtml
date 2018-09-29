@@ -1,0 +1,38 @@
+﻿@model IEnumerable<bidster.Models.Auction>
+@{
+    ViewBag.Title = "WonAuctions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@if (Model.Count() == 0)
+{
+    <h2 class="text-center">There are no auctions yet.</h2>
+}
+else
+{
+
+    <h2 class="text-center">Won Auctions</h2>
+    <hr />
+    foreach (var item in Model)
+    {
+        <div class="box">
+            <img src=@Url.Action("GetImage", new { id = item.ID}) class="img-rounded col-md-0" style="float:left;" width="360px" height="340px" />
+            <div class="container">
+                <div class="row">
+                    <div class="text-center">
+                        <span style="font-size:120%">Product name: @Html.ActionLink(item.Name, "Details/" + item.ID, "Auctions")</span>
+                        <br />
+                        <br />
+                        <span style="font-size:120%;">Price: <span id="price_@item.ID">@item.Price</span></span>
+                        <br />
+                        <br />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+
+ 

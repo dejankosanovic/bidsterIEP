@@ -1,0 +1,71 @@
+﻿@model bidster.Models.SystemParameters
+
+@{
+    ViewBag.Title = "Change System Parameters";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewData.ContainsKey("success"))
+{
+    <h2 class="text-center">You have successfully changed the system parameters.</h2>
+}
+else
+{
+    <h2 class="text-center">System Parameters</h2>
+
+    using (Html.BeginForm("ChangeSystemParameters", "Admin", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal col-md-4 col-md-offset-4">
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                <div class="col-md-10">
+                    @Html.LabelFor(model => model.NumberOfLatestAuctions, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.EditorFor(model => model.NumberOfLatestAuctions, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                @Html.ValidationMessageFor(model => model.NumberOfLatestAuctions, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-10">
+                    @Html.LabelFor(model => model.DefaultAuctionDuration, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.EditorFor(model => model.DefaultAuctionDuration, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                @Html.ValidationMessageFor(model => model.DefaultAuctionDuration, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-10">
+                    @Html.LabelFor(model => model.SilverPackageTokens, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.EditorFor(model => model.SilverPackageTokens, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                @Html.ValidationMessageFor(model => model.SilverPackageTokens, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-10">
+                    @Html.LabelFor(model => model.GoldPackageTokens, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.EditorFor(model => model.GoldPackageTokens, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                @Html.ValidationMessageFor(model => model.GoldPackageTokens, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-10">
+                    @Html.LabelFor(model => model.PlatinumPackageTokens, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.EditorFor(model => model.PlatinumPackageTokens, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                @Html.ValidationMessageFor(model => model.PlatinumPackageTokens, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-10">
+                    <input type="submit" value="Save Changes" class="btn btn-primary btn-lg btn-block login-button" />
+                </div>
+            </div>
+        </div>
+    }
+}
+

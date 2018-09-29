@@ -1,0 +1,153 @@
+﻿@model PagedList.IPagedList<bidster.Models.Auction>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (Model.Count == 0)
+{
+    <h2 class="text-center">There are no auctions yet.</h2>
+}
+else
+{
+    <link rel="stylesheet" href="~/Content/bootstrap-slider.css">
+    <script src="~/Scripts/bootstrap-slider.js"></script>
+    <script src="~/Scripts/timer.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.3.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+
+    <h2 class="text-center">Search</h2>
+
+
+    <form method="get" action="/Auctions/Search">
+        <div class="row">
+            <div class="col-xs-6 col-md-4">
+
+                <input type="radio" id="active" name="state" value="Opened" />
+                <label for="active">Active</label>
+
+                <input type="radio" id="completed" name="state" value="Finished" />
+                <label for="completed">Completed</label>
+
+                <input type="radio" id="all" name="state" value="all" checked />
+                <label for="all">All</label>
+
+                <br />
+
+                <b>@ViewBag.MinPrice T  </b> <input id="price" type="text" class="span2" name="priceRange" data-slider-min="@ViewBag.MinPrice" data-slider-max="@ViewBag.MaxPrice" data-slider-step="5" data-slider-value="[@ViewBag.MinPrice, @ViewBag.MaxPrice]" /> <b>  @ViewBag.MaxPrice T</b>
+
+                <br />
+
+                <label>Search by name:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="search" />
+                    <div class="input-group-btn">
+                        <button class="btn btn-primary" type="submit">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+
+    <hr />
+
+
+
+
+    foreach (var item in Model)
+    {
+        <div class="box">
+            <img src=@Url.Action("GetImage", new { id = item.ID}) class="img-rounded col-md-0" style="float:left;" width="360px" height="340px" />
+            <div class="container">
+                <div class="row">
+                    <div class="text-center">
+                        <span style="font-size:120%">Product name: @Html.ActionLink(item.Name, "Details/" + item.ID, "Auctions")</span>
+                        <br />
+                        <br />
+                        @if (item.Bid.Count != 0)
+                        {
+                            <span style="font-size:120%;">Last bid by: <span id="user_@item.ID">@item.Bid.OrderByDescending(m => m.Date).ThenByDescending(m => m.Time).First().User.Email</span></span>
+                        }
+                        else
+                        {
+                            <span style="font-size:120%;">Last bid by: <span id="user_@item.ID"></span></span>
+                        }
+                        <br />
+                        <br />
+                        <span style="font-size:120%;">Price: <span id="price_@item.ID" >@item.Price</span></span>
+                        <br />
+                        <br />
+                        <span style="font-size:120%;">Amount to bid: <input type="number" id="input_@item.ID" /></span>
+                        <br />
+                        <br />
+                        @if (Session["userType"] != null && (int)Session["userID"] != item.PostedByUser)
+                        {
+                            <button id="button @item.ID" type="submit" onclick="sendBid(@item.ID)" class="btn btn-primary btn-sm">Bid</button>
+                            <br />
+                            <br />
+                        }
+                        else
+                        {
+                            <button id="button @item.ID" type="submit" onclick="sendBid(@item.ID)" class="btn btn-primary btn-sm" disabled>Bid</button>
+                            <br />
+                            <br />
+                        }
+                        <p id="@item.ID" style="font-size:200%"></p>
+                        <script>
+                            var runTimer = function() {
+                                var x = setInterval(function () { startTimer(new Date('@String.Format("{0:MMM dd, yyyy HH:mm:ss}", item.DateOpened.Value.Add(item.TimeOpened.Value.Add(new TimeSpan(0, 0, (int)item.Duration))))').getTime(), @item.ID);}, 1000);
+                            }
+                            runTimer();
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <p>Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</p>
+    @Html.PagedListPager(Model, page => Url.Action("Search", new { page, state = ViewBag.state, search = ViewBag.search, priceRange = ViewBag.priceRange }))
+
+
+    <script>
+        $("#price").slider({});
+    </script>
+
+    <script>
+        $(function () {
+            
+            var bidHub = $.connection.bidHub;
+
+            bidHub.client.addNewBid = function (name, price, auctionID) {
+                $('#user_' + auctionID)[0].innerHTML = '<strong>' + name + '</strong>';
+                $('#price_' + auctionID)[0].innerHTML = '<strong>' + price + '</strong>';
+                var newPrice = price + 1;
+                $('#input_' + auctionID).val(newPrice);
+            };
+
+            $.connection.hub.start();
+
+        });
+
+    </script>
+
+    if(Session["userType"] != null)
+    {
+        <script>
+            function sendBid(id) {
+                var inputID = '#input_' + id;
+                var price = $(inputID).val();
+                var user = @Session["userID"];
+                $.connection.bidHub.server.send(user, price, id);
+            }
+        </script>
+    }
+
+}

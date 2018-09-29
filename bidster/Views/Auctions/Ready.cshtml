@@ -1,0 +1,47 @@
+﻿@model IEnumerable<bidster.Models.Auction>
+
+@{
+    ViewBag.Title = "Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewData.ContainsKey("empty"))
+{
+    <h2 class="text-center">There are no ready auctions at this time.</h2>
+}
+else
+{
+    <h2>Search</h2>
+
+    foreach (var item in Model)
+    {
+        <div class="box">
+            <img src=@Url.Action("GetImage", new { id = item.ID}) class="img-rounded col-md-0" style="float:left;" width="360px" height="340px" />
+            <div class="container">
+                <div class="row">
+                    <div class="text-center">
+                        <span style="font-size:120%">Product name: @item.Name</span>
+                        <br />
+                        <br />
+                        <span style="font-size:120%;">Date Created: @item.DateCreated.Date.ToString("dd/MM/yyyy")</span>
+                        <br />
+                        <br />
+                        <span style="font-size:120%;">Time Created: @item.TimeCreated.ToString(@"hh\:mm\:ss")</span>
+                        <br />
+                        <br />
+                        <span style="font-size:120%;">Duration: @item.Duration</span>
+                        <br />
+                        <br />
+                        <form method="post" action="/Auctions/Ready">
+                            <button name="button" value="accept" type="submit" class="btn btn-primary btn-sm">Accept</button>
+                            <button name="button" value="decline" type="submit" class="btn btn-primary btn-sm">Decline</button>
+                            <input name="id" type="hidden" value="@item.ID" />
+                        </form>
+                        <br />
+                        <br />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

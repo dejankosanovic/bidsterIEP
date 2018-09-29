@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html>
+
+<style type="text/css">
+    body {
+        background: #e1e5ed !important;
+    }
+</style>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+
+    <script language="JavaScript" type="text/javascript" src="~/Scripts/jquery-1.10.2.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/Content/main.css">
+    <link href="/Content/bootstrap.css" rel="stylesheet" />
+    <link href="/Content/site.css" rel="stylesheet" />
+    <script src="/Scripts/modernizr-2.6.2.js"></script>
+    <script src="/Scripts/bootstrap.js"></script>
+    <script src="/Scripts/respond.js"></script>
+
+
+</head>
+
+<body>
+
+    @if (Session["userType"] != null)
+    {
+        if ((string)Session["userType"] == "user")
+        {
+            @Html.Partial("_UserNavBar")
+        }
+        else
+        {
+            @Html.Partial("_AdminNavBar")
+        }
+    }
+    else
+    {
+        @Html.Partial("_GuestNavBar")
+    }
+
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+    <br />
+
+
+
+</body>
+</html>
